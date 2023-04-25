@@ -1,8 +1,9 @@
-const bcrypt = require("bcrypt");
 const { client } = require("../config/mongoconfig");
 const jwt = require("jsonwebtoken");
 const getinfo = async (req, res) => {
-  const data = jwt.verify(req.body.token, process.env.ACCESS_TOKEN_KEY);
+  const token = req.body.token;
+  if (!token) res.status(403);
+  const data = jwt.verify(token, process.env.ACCESS_TOKEN_KEY);
   const dbc = client.db("myDB").collection("users");
   try {
     const fdata = await dbc.findOne({ email: data.user });

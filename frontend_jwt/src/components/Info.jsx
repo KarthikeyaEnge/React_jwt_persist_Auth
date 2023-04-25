@@ -1,12 +1,12 @@
 import React from "react";
-import { AuthContext } from "../context/Authprovider";
 import { axiosrequest } from "../apis/axiosrequest";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 const Info = () => {
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useAuth();
   const [isloading, setIsloading] = useState(false);
-  useEffect(async () => {
+  useEffect(() => {
     setIsloading(true);
     const getdata = async () => {
       const msg = await axiosrequest.get("/info", {
@@ -15,18 +15,16 @@ const Info = () => {
       setAuth({ auth, user: msg.data.user });
     };
     console.log(auth.user);
-    await getdata();
+    auth.accesstoken ? getdata() : setIsloading(false);
     setIsloading(false);
   }, []);
 
   return (
     <main>
-      {auth.user !== undefined ? (
-        isloading ? (
-          <h1>Loading....</h1>
-        ) : (
-          <h1>{auth?.user}</h1>
-        )
+      {isloading ? (
+        <h1>Loading...</h1>
+      ) : auth?.user ? (
+        <h1>{auth?.user}</h1>
       ) : (
         <Navigate to="/login" />
       )}
