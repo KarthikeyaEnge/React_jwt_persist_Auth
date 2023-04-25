@@ -11,9 +11,4 @@ router.route("/login").post(require("../controllers/loginuser"));
 /**this route is used to provide the refresh token */
 router.route("/refresh").get(require("../controllers/refresh"));
 
-router.use(require("../middleware/verifyJwt"));
-
-/**rotuer use to get the info */
-router.route("/info").get(require("../controllers/getinfo"));
-
 module.exports = router;

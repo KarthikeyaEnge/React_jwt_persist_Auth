@@ -16,8 +16,12 @@ app.use(mongoconfig);
 /**this app level router handles all the requests for user */
 app.use("/users", require("./Routes/user"));
 
-/**error handler */
+app.use(require("./middleware/verifyJwt"));
 
+/**rotuer use to get the info */
+app.route("/info").get(require("./controllers/getinfo"));
+
+/**error handler */
 app.use(require("./middleware/errorHandler"));
 app.listen(PORT, () => {
   console.log(`Running in port ${PORT}`);

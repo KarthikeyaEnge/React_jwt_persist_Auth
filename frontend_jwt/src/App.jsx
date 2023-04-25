@@ -17,9 +17,9 @@ function App() {
         <Route path="signup" element={<Signup />} />
         <Route path="login" element={<Login />} />
         {/** Protected Routes*/}
-        <Route element={<PersistAuth />}>
-          <Route to="info" element={<Info />} />
-        </Route>
+        {/* <Route element={<PersistAuth />}> */}
+        <Route to="info" element={<Info />} />
+        {/* </Route> */}
       </Routes>
     </React.Fragment>
   );

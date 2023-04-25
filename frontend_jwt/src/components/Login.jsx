@@ -1,42 +1,40 @@
-import React from "react";
-import { FaPlay } from "react-icons/fa";
+import React, { useState } from "react";
 import { useRef, useEffect, useContext } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { AuthContext } from "../context/Authprovider";
+import useAuth from "../hooks/useAuth";
 import { axiosrequest } from "../apis/axiosrequest";
 const Login = () => {
   const user = useRef("");
   const pass = useRef("");
-
+  const [isloading, setIsloading] = useState(false);
   useEffect(() => {
     user.current.focus();
   }, []);
-
-  const { auth, setAuth } = useContext(AuthContext);
-
+  const { auth, setAuth } = useAuth();
   const handlesubmit = async (e) => {
     e.preventDefault();
-
+    setIsloading(true);
     const data = {
       email: user.current.value,
       pass: pass.current.value,
     };
     try {
-      const msg = await axiosrequest.post("/login", data);
+      const msg = await axiosrequest.post("/users/login", data);
 
-      console.log(msg.data);
+      console.log(msg.data.Bearer);
       const accesstoken = msg.data.Bearer;
+      setAuth({ accesstoken, user: user.current.value });
       user.current.value = "";
       pass.current.value = "";
-      setAuth({ accesstoken, user });
     } catch (err) {
       console.log(err.message);
     }
+    setIsloading(false);
   };
 
   return (
     <>
-      {!auth?.accesstoken ? (
+      {auth.accesstoken === undefined ? (
         <main className="flex flex-col min-h-screen bg-slate-800 items-center justify-center text-center">
           <img src="https://skillicons.dev/icons?i=react" alt="img" />
           <h1 className="text-xl text-slate-300">Login to your account</h1>
@@ -77,6 +75,8 @@ const Login = () => {
             </Link>
           </form>
         </main>
+      ) : isloading ? (
+        <h1>Loading...</h1>
       ) : (
         <Navigate to="/info" />
       )}

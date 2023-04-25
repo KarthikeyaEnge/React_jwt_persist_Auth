@@ -1,10 +1,9 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
 import { useEffect, useContext, useState } from "react";
 import { AuthContext } from "../context/Authprovider";
 import { axiosrequest } from "../apis/axiosrequest";
-
-const PersistAuth = ({ children }) => {
+import { Outlet } from "react-router-dom";
+const PersistAuth = () => {
   const [isloading, setIsloading] = useState(false);
 
   const { auth, setAuth } = useContext(AuthContext);
@@ -14,7 +13,7 @@ const PersistAuth = ({ children }) => {
     console.log(auth.accesstoken);
     const refreshauth = async () => {
       try {
-        const msg = await axiosrequest.get("/refresh");
+        const msg = await axiosrequest.get("/users/refresh");
         const accesstoken = msg.data.accesstoken;
         setAuth({ accesstoken });
       } catch (err) {
@@ -22,21 +21,11 @@ const PersistAuth = ({ children }) => {
       }
     };
 
-    !auth?.accesstoken ? refreshauth() : setIsloading(false);
+    auth.accesstoken === undefined ? refreshauth() : setIsloading(false);
     setIsloading(false);
   }, []);
 
-  return (
-    <>
-      {isloading ? (
-        <h1>Loading...</h1>
-      ) : !auth?.accesstoken ? (
-        <Navigate to="/login" />
-      ) : (
-        children
-      )}
-    </>
-  );
+  return <>{isloading ? <h1>Loading...</h1> : <Outlet />}</>;
 };
 
 export default PersistAuth;

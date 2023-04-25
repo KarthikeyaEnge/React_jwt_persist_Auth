@@ -14,11 +14,11 @@ const Signup = () => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
-    console.log(user.current.value);
+
     if (pass.current.value === conpass.current.value) {
       try {
         const data = { email: user.current.value, pass: pass.current.value };
-        const msg = await axiosrequest.post("/add", data);
+        const msg = await axiosrequest.post("/users/add", data);
         console.log(msg.data.message);
       } catch (err) {
         console.log(err.message);
