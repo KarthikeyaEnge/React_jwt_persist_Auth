@@ -9,7 +9,7 @@ const Info = () => {
   useEffect(() => {
     setIsloading(true);
     const getdata = async () => {
-      const msg = await axiosrequest.get("/info", {
+      const msg = await axiosrequest.post("/info", {
         token: auth.accesstoken,
       });
       setAuth({ auth, user: msg.data.user });
