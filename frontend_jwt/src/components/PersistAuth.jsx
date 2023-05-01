@@ -26,14 +26,15 @@ const PersistAuth = () => {
           token: auth.accesstoken,
         };
         const msg = await axiosrequest.post("/verifyjwt", data);
-        setIsloading(false);
-        console.log(msg.status);
+
+        console.log(msg);
       } catch (err) {
         console.log(err.message);
       }
     };
 
     !auth?.accesstoken ? refreshauth() : verify();
+    setIsloading(false);
   }, []);
 
   return <>{isloading ? <h1>Loading...</h1> : <Outlet />}</>;
