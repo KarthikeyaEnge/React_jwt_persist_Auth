@@ -29,6 +29,7 @@ app.route("/logout").get(require("./controllers/logout"));
 
 /**error handler */
 app.use(require("./middleware/errorHandler"));
+
 app.listen(PORT, () => {
   console.log(`Running in port ${PORT}`);
 });
