@@ -1,11 +1,11 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
 import { axiosrequest } from "../apis/axiosrequest";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 const PersistAuth = () => {
   const [isloading, setIsloading] = useState(true);
-
+  const [checked, setChecked] = useState(true);
   const { auth, setAuth } = useAuth();
 
   useEffect(() => {
@@ -26,8 +26,9 @@ const PersistAuth = () => {
           token: auth.accesstoken,
         };
         const msg = await axiosrequest.post("/verifyjwt", data);
-
-        console.log(msg);
+        if (msg.status !== 200) {
+          setChecked(false);
+        }
       } catch (err) {
         console.log(err.message);
       }
@@ -37,7 +38,17 @@ const PersistAuth = () => {
     setIsloading(false);
   }, []);
 
-  return <>{isloading ? <h1>Loading...</h1> : <Outlet />}</>;
+  return (
+    <>
+      {isloading ? (
+        <h1>Loading...</h1>
+      ) : checked ? (
+        <Outlet />
+      ) : (
+        <Navigate to="/" />
+      )}
+    </>
+  );
 };
 
 export default PersistAuth;

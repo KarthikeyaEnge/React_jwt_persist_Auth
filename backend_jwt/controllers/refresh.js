@@ -1,17 +1,21 @@
 const jwt = require("jsonwebtoken");
-
+require("dotenv").config();
 const refresh = (req, res) => {
   try {
     const cookie = req.cookies;
+    const head = req.headers;
     if (!cookie?.refresh) res.status(401);
     const refreshtoken = cookie?.refresh;
     const check = jwt.verify(
-      process.env.REFRESH_TOKEN_KEY,
       refreshtoken,
+      process.env.REFRESH_TOKEN_KEY,
       (err, decoded) => {
         if (err) res.json({ message: err });
+
         const accesstoken = jwt.sign(
-          decoded.user,
+          {
+            user: decoded.user,
+          },
           process.env.ACCESS_TOKEN_KEY,
           { expiresIn: "50s" }
         );

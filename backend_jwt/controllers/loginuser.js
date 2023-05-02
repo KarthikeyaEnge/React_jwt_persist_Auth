@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { client } = require("../config/mongoconfig");
 
+require("dotenv").config();
+
 const loginuser = async (req, res) => {
   const { email, pass } = req.body;
   console.log(email);
@@ -26,9 +28,8 @@ const loginuser = async (req, res) => {
           process.env.REFRESH_TOKEN_KEY,
           { expiresIn: "1d" }
         );
-
         res.cookie("refresh", refreshtoken, {
-          httponly: true,
+          httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24,
         });
         res.json({ Bearer: accesstoken });
